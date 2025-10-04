@@ -209,9 +209,8 @@ feature-store-project/
 
 ## Contact & Links
 
-- **LinkedIn**: [Your LinkedIn Profile]
-- **GitHub**: [Your GitHub Profile]
-- **Email**: [Your Email]
+- **LinkedIn**: [[Your LinkedIn Profile](https://www.linkedin.com/in/srinathkaithoju/)]
+
 
 ## License
 
