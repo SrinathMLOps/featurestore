@@ -1,0 +1,166 @@
+# Feature Store Configuration
+# This file contains configuration parameters for the feature store
+
+# Project metadata
+project: user_activity_features
+description: Feature store for user activity aggregated features
+
+# Feature store settings
+feature_store:
+  # Repository path for feature definitions
+  repo_path: "."
+  
+  # Provider type (local for demo, can be gcp, aws, etc. in production)
+  provider: local
+  
+  # Registry configuration (stores feature definitions metadata)
+  registry:
+    path: "data/registry.db"
+    cache_ttl_seconds: 60
+  
+  # Offline store configuration (for historical/training features)
+  offline_store:
+    type: file  # Options: file, bigquery, snowflake, redshift
+    path: "data/offline_store"
+  
+  # Online store configuration (for real-time/serving features)
+  online_store:
+    type: sqlite  # Options: sqlite, redis, dynamodb, datastore
+    path: "data/online_store.db"
+
+# Feature view configuration
+feature_views:
+  user_activity_features:
+    # Entity this feature view is associated with
+    entities:
+      - user_id
+    
+    # Time-to-live for features (how long they remain valid)
+    ttl_days: 1
+    
+    # Features included in this view
+    features:
+      - name: total_activities
+        dtype: int64
+        description: "Total number of user activities (views, clicks, purchases)"
+      
+      - name: unique_products_viewed
+        dtype: int64
+        description: "Count of unique products viewed by the user"
+      
+      - name: purchase_count
+        dtype: int64
+        description: "Number of purchases made by the user"
+    
+    # Batch source configuration
+    batch_source:
+      type: file
+      path: "data/user_activity_features.parquet"
+      timestamp_field: "event_timestamp"
+    
+    # Stream source configuration (optional, for real-time updates)
+    stream_source:
+      type: kafka  # Example: kafka, kinesis
+      topic: "user_activity_features"
+      bootstrap_servers: "localhost:9092"
+
+# Entity definitions
+entities:
+  user:
+    name: user_id
+    value_type: int64
+    description: "Unique identifier for users"
+    join_keys:
+      - user_id
+
+# Feature serving configuration
+serving:
+  # Batch serving (for training)
+  batch:
+    max_age_seconds: 86400  # 24 hours
+    
+  # Online serving (for inference)
+  online:
+    max_age_seconds: 3600  # 1 hour
+    read_timeout_ms: 100
+    write_timeout_ms: 100
+
+# Monitoring and logging
+monitoring:
+  # Enable feature monitoring
+  enabled: true
+  
+  # Log feature retrieval requests
+  log_requests: true
+  
+  # Track feature statistics
+  track_statistics: true
+  
+  # Alert thresholds
+  alerts:
+    # Alert if feature retrieval latency exceeds threshold
+    latency_threshold_ms: 500
+    
+    # Alert if feature null rate exceeds threshold
+    null_rate_threshold: 0.1
+
+# Data quality checks
+data_quality:
+  # Enable data validation
+  enabled: true
+  
+  # Validation rules
+  rules:
+    - feature: total_activities
+      min_value: 0
+      max_value: 10000
+    
+    - feature: unique_products_viewed
+      min_value: 0
+      max_value: 1000
+    
+    - feature: purchase_count
+      min_value: 0
+      max_value: 100
+
+# Performance tuning
+performance:
+  # Batch size for feature retrieval
+  batch_size: 1000
+  
+  # Number of parallel workers
+  num_workers: 4
+  
+  # Cache settings
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size_mb: 100
+
+# Development settings
+development:
+  # Use sample data for testing
+  use_sample_data: true
+  
+  # Sample data size
+  sample_size: 1000
+  
+  # Debug mode
+  debug: false
+
+# Production settings (commented out for demo)
+# production:
+#   # Use production data sources
+#   use_production_data: true
+#   
+#   # Enable high availability
+#   high_availability: true
+#   
+#   # Replication factor
+#   replication_factor: 3
+#   
+#   # Backup configuration
+#   backup:
+#     enabled: true
+#     frequency: daily
+#     retention_days: 30

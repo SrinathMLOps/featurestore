@@ -1,0 +1,8 @@
+# Feature Store Project Dependencies
+
+# Core dependencies
+feast>=0.30.0
+pandas>=1.5.0
+
+# Optional dependencies for development
+pytest>=7.0.0
