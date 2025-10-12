@@ -212,7 +212,8 @@ feature-store-project/
 - **LinkedIn**: [[Your LinkedIn Profile](https://www.linkedin.com/in/srinathkaithoju/)]
 
 
-## License
+
+## License.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
